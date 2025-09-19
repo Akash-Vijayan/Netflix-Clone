@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Netflix Header -->
+    <header class="netflix-header" id="header">
+        <div class="header-container">
+            <!-- Left side -->
+            <div class="header-left">
+                <div class="netflix-logo">NETFLIX</div>
+                <nav class="header-nav">
+                <a href="#heroSection" class="nav-link active">Home</a>
+                <a href="#originalsRow" class="nav-link">TV Shows</a>
+                <a href="#actionRow" class="nav-link">Movies</a>
+                <a href="#trendingRow" class="nav-link">New & Popular</a>
+                <a href="#documentariesRow" class="nav-link">My List</a>
+</nav>
+            </div>
+            
+            <!-- Right side -->
+            <div class="header-right">
+                <div class="search-container">
+                    <button class="search-btn" id="searchBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.39zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z"/>
+                        </svg>
+                    </button>
+                    <div class="search-input-container" id="searchContainer">
+                        <input type="text" placeholder="Titles, people, genres" id="searchInput" class="search-input">
+                        <button class="search-close" id="searchClose">×</button>
+                    </div>
+                </div>
+                
+                <button class="notifications-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </button>
+                
+                <div class="profile-container">
+                    <div class="profile-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="profile-dropdown">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="heroSection">
+        <div class="hero-content">
+            <h1 class="hero-title" id="heroTitle">Stranger Things</h1>
+            <p class="hero-description" id="heroDescription">
+                When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.
+            </p>
+            
+            <div class="hero-buttons">
+                <button class="hero-btn play-btn" id="heroPlayBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    Play
+                </button>
+                <button class="hero-btn info-btn" id="heroInfoBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    More Info
+                </button>
+            </div>
+            
+            <div class="hero-meta">
+                <span class="rating">TV-14</span>
+                <span class="year">2016</span>
+                <span class="genre">Sci-Fi Drama</span>
+            </div>
+        </div>
+        
+        <div class="hero-volume">
+            <button class="volume-btn" id="volumeBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="volumeIcon">
+                    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- Movie Rows Container -->
+    <div class="movie-rows-container">
+        <!-- Trending Now -->
+        <div class="movie-row" id="trendingRow">
+            <h2 class="row-title">Trending Now</h2>
+            <div class="row-container">
+                <button class="row-nav row-nav-left" id="trending-left">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="movie-cards-container" id="trendingCards"></div>
+                <button class="row-nav row-nav-right" id="trending-right">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Netflix Originals -->
+        <div class="movie-row" id="originalsRow">
+            <h2 class="row-title">Netflix Originals</h2>
+            <div class="row-container">
+                <button class="row-nav row-nav-left" id="originals-left">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="movie-cards-container" id="originalsCards"></div>
+                <button class="row-nav row-nav-right" id="originals-right">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Action Movies -->
+        <div class="movie-row" id="actionRow">
+            <h2 class="row-title">Action Movies</h2>
+            <div class="row-container">
+                <button class="row-nav row-nav-left" id="action-left">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="movie-cards-container" id="actionCards"></div>
+                <button class="row-nav row-nav-right" id="action-right">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tamil Movies -->
+<div class="movie-row" id="tamilRow">
+    <h2 class="row-title">Tamil Movies</h2>
+    <div class="row-container">
+        <button class="row-nav row-nav-left" id="tamil-left">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+        <div class="movie-cards-container" id="tamilCards"></div>
+        <button class="row-nav row-nav-right" id="tamil-right">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+        <!-- Documentaries -->
+        <div class="movie-row" id="documentariesRow">
+            <h2 class="row-title">Documentaries</h2>
+            <div class="row-container">
+                <button class="row-nav row-nav-left" id="documentaries-left">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="movie-cards-container" id="documentariesCards"></div>
+                <button class="row-nav row-nav-right" id="documentaries-right">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Movie Modal -->
+    <div class="modal-overlay" id="movieModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            
+            <div class="modal-hero" id="modalHero">
+                <div class="modal-content">
+                    <h1 class="modal-title" id="modalTitle"></h1>
+                    <div class="modal-buttons">
+                        <button class="modal-btn play-btn" id="modalPlayBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            Play
+                        </button>
+                        <button class="modal-btn icon-btn" id="modalAddBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                        </button>
+                        <button class="modal-btn icon-btn" id="modalLikeBtn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <button class="modal-volume" id="modalVolumeBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                        <path d="M23 9v6M19 7v10"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-details">
+                <div class="modal-info">
+                    <div class="modal-meta">
+                        <span class="match-percentage" id="modalMatch">97% Match</span>
+                        <span class="modal-rating" id="modalRating">TV-14</span>
+                        <span class="modal-year" id="modalYear">2016</span>
+                        <span class="modal-quality">HD</span>
+                    </div>
+                    <p class="modal-description" id="modalDescription"></p>
+                </div>
+                
+                <div class="modal-sidebar">
+                    <div class="modal-cast">
+                        <span class="label">Cast:</span>
+                        <span class="value" id="modalCast"></span>
+                    </div>
+                    <div class="modal-genres">
+                        <span class="label">Genres:</span>
+                        <span class="value" id="modalGenres"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <h4 class="toast-title" id="toastTitle">Content Not Available</h4>
+            <p class="toast-message" id="toastMessage">This content is not available for streaming at this time.</p>
+        </div>
+        <button class="toast-close" id="toastClose">×</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="mockData.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
