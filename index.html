@@ -15,18 +15,26 @@
         <div class="header-container">
             <!-- Left side -->
             <div class="header-left">
-                <div class="netflix-logo">NETFLIX</div>
+                <div class="netflix-logo">STREAM.io</div>
                 <nav class="header-nav">
-                <a href="#heroSection" class="nav-link active">Home</a>
-                <a href="#originalsRow" class="nav-link">TV Shows</a>
-                <a href="#actionRow" class="nav-link">Movies</a>
-                <a href="#trendingRow" class="nav-link">New & Popular</a>
-                <a href="#documentariesRow" class="nav-link">My List</a>
-</nav>
+                    <a href="#heroSection" class="nav-link active">Home</a>
+                    <a href="#originalsRow" class="nav-link">TV Shows</a>
+                    <a href="#actionRow" class="nav-link">Movies</a>
+                    <a href="#trendingRow" class="nav-link">New & Popular</a>
+                    <a href="#documentariesRow" class="nav-link">My List</a>
+                </nav>
             </div>
             
             <!-- Right side -->
             <div class="header-right">
+                <!-- Warm Light Toggle -->
+                <button class="warm-light-btn" id="warmLightBtn" title="Warm Light Mode">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="m12 1-1.5 1.5L12 4l1.5-1.5L12 1zM21 11h-3l1.5 1.5L21 13v-2zM6 11H3v2l1.5-.5L6 11zM12 20l-1.5 1.5L12 23l1.5-1.5L12 20zM5.99 4.99l-1.42 1.42L6 7.84 7.42 6.42 5.99 4.99zM18.01 4.99l-1.42 1.42L18.01 7.84l1.42-1.42L18.01 4.99zM5.99 19.01l1.42-1.42L6 16.16 4.58 17.58l1.41 1.43zM18.01 19.01l1.42-1.42L18.01 16.16l-1.42 1.42 1.42 1.43z"/>
+                    </svg>
+                </button>
+
                 <div class="search-container">
                     <button class="search-btn" id="searchBtn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -65,19 +73,32 @@
 
     <!-- Hero Section -->
     <section class="hero-section" id="heroSection">
-        <div class="hero-content">
+        <!-- Video Player -->
+        <video 
+            class="hero-video" 
+            id="heroVideo" 
+            muted 
+            preload="metadata"
+            poster="./Images/Top/Strangerthings.jpg"
+        >
+            <source src="StrangerThings.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        <div class="hero-content" id="heroContent">
             <h1 class="hero-title" id="heroTitle">Stranger Things</h1>
             <p class="hero-description" id="heroDescription">
                 When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.
             </p>
             
             <div class="hero-buttons">
-                <button class="hero-btn play-btn" id="heroPlayBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <a href="player.html" class="hero-btn play-btn" id="heroPlayBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="playIcon">
                         <path d="M8 5v14l11-7z"/>
                     </svg>
-                    Play
-                </button>
+                    <span id="playText">Play</span>
+                </a>
+
                 <button class="hero-btn info-btn" id="heroInfoBtn">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"/>
@@ -99,11 +120,51 @@
             <button class="volume-btn" id="volumeBtn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="volumeIcon">
                     <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    <line x1="23" y1="9" x2="17" y2="15"/>
+                    <line x1="17" y1="9" x2="23" y2="15"/>
                 </svg>
             </button>
         </div>
+
+        <!-- Video Controls Overlay -->
+        <div class="video-controls" id="videoControls">
+            <div class="video-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            </div>
+        </div>
     </section>
+
+    <!-- Break Popup (Stream Pass) -->
+    <div class="break-popup" id="breakPopup">
+        <div class="break-content">
+            <div class="break-header">
+                <h2>Stream Pass</h2>
+                <p>Take a quick break and stay refreshed</p>
+            </div>
+            
+            <div class="break-body">
+                <div class="break-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <h3>Your eyes deserve a break!</h3>
+                <p>We've paused your stream to help reduce eye strain.</p>
+                <div class="break-timer" id="breakTimer">Continue in: <span id="timerCount">5</span>s</div>
+            </div>
+            
+            <div class="break-footer">
+                <button class="continue-btn" id="continueBtn">Continue Watching</button>
+                <button class="settings-btn" id="settingsBtn">Disable Break Reminders</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warm Light Overlay -->
+    <div class="warm-light-overlay" id="warmLightOverlay"></div>
 
     <!-- Movie Rows Container -->
     <div class="movie-rows-container">
@@ -162,22 +223,22 @@
         </div>
 
         <!-- Tamil Movies -->
-<div class="movie-row" id="tamilRow">
-    <h2 class="row-title">Tamil Movies</h2>
-    <div class="row-container">
-        <button class="row-nav row-nav-left" id="tamil-left">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15 18l-6-6 6-6"/>
-            </svg>
-        </button>
-        <div class="movie-cards-container" id="tamilCards"></div>
-        <button class="row-nav row-nav-right" id="tamil-right">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 18l6-6-6-6"/>
-            </svg>
-        </button>
-    </div>
-</div>
+        <div class="movie-row" id="tamilRow">
+            <h2 class="row-title">Tamil Movies</h2>
+            <div class="row-container">
+                <button class="row-nav row-nav-left" id="tamil-left">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="movie-cards-container" id="tamilCards"></div>
+                <button class="row-nav row-nav-right" id="tamil-right">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
 
         <!-- Documentaries -->
         <div class="movie-row" id="documentariesRow">
@@ -211,7 +272,7 @@
                 <div class="modal-content">
                     <h1 class="modal-title" id="modalTitle"></h1>
                     <div class="modal-buttons">
-                        <button class="modal-btn play-btn" id="modalPlayBtn">
+                        <a href="player.html" class="modal-btn play-btn" id="modalPlayBtn"></a>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M8 5v14l11-7z"/>
                             </svg>

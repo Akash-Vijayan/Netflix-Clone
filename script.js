@@ -4,6 +4,11 @@ class NetflixApp {
     constructor() {
         this.currentMovie = null;
         this.isMuted = true;
+        this.isWarmLightActive = false;
+        this.videoElement = null;
+        this.breakTimer = null;
+        this.breakCountdown = null;
+        this.isVideoPlaying = false;
         this.init();
     }
 
@@ -11,6 +16,7 @@ class NetflixApp {
         this.setupEventListeners();
         this.loadMovieRows();
         this.setupScrollHeader();
+        this.setupVideoPlayer();
     }
 
     setupEventListeners() {
@@ -36,13 +42,19 @@ class NetflixApp {
             }
         });
 
+        // Warm Light Toggle
+        const warmLightBtn = document.getElementById('warmLightBtn');
+        warmLightBtn.addEventListener('click', () => {
+            this.toggleWarmLight();
+        });
+
         // Hero section buttons
         const heroPlayBtn = document.getElementById('heroPlayBtn');
         const heroInfoBtn = document.getElementById('heroInfoBtn');
         const volumeBtn = document.getElementById('volumeBtn');
 
         heroPlayBtn.addEventListener('click', () => {
-            this.showNotAvailableToast(window.movieData.heroMovie.title);
+            this.toggleVideoPlayback();
         });
 
         heroInfoBtn.addEventListener('click', () => {
@@ -51,6 +63,19 @@ class NetflixApp {
 
         volumeBtn.addEventListener('click', () => {
             this.toggleVolume();
+        });
+
+        // Break popup functionality
+        const continueBtn = document.getElementById('continueBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+
+        continueBtn.addEventListener('click', () => {
+            this.hideBreakPopup();
+        });
+
+        settingsBtn.addEventListener('click', () => {
+            this.showNotAvailableToast('Break reminder settings are not available in this demo');
+            this.hideBreakPopup();
         });
 
         // Modal functionality
@@ -82,6 +107,219 @@ class NetflixApp {
 
         // Row navigation
         this.setupRowNavigation();
+    }
+
+    setupVideoPlayer() {
+        this.videoElement = document.getElementById('heroVideo');
+        const progressFill = document.getElementById('progressFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const videoControls = document.getElementById('videoControls');
+
+        if (this.videoElement) {
+            // Video event listeners
+            this.videoElement.addEventListener('loadedmetadata', () => {
+                this.updateTimeDisplay();
+            });
+
+            this.videoElement.addEventListener('timeupdate', () => {
+                this.updateProgress();
+                this.updateTimeDisplay();
+            });
+
+            this.videoElement.addEventListener('play', () => {
+                this.isVideoPlaying = true;
+                this.updatePlayButton();
+                this.startBreakTimer();
+            });
+
+            this.videoElement.addEventListener('pause', () => {
+                this.isVideoPlaying = false;
+                this.updatePlayButton();
+                this.clearBreakTimer();
+            });
+
+            this.videoElement.addEventListener('ended', () => {
+                this.isVideoPlaying = false;
+                this.updatePlayButton();
+                this.hideVideo();
+                this.clearBreakTimer();
+            });
+
+            // Show/hide controls on hover
+            const heroSection = document.getElementById('heroSection');
+            let controlsTimeout;
+
+            const showControls = () => {
+                if (this.isVideoPlaying) {
+                    videoControls.classList.add('visible');
+                    clearTimeout(controlsTimeout);
+                    controlsTimeout = setTimeout(() => {
+                        videoControls.classList.remove('visible');
+                    }, 3000);
+                }
+            };
+
+            const hideControls = () => {
+                videoControls.classList.remove('visible');
+            };
+
+            heroSection.addEventListener('mousemove', showControls);
+            heroSection.addEventListener('mouseleave', hideControls);
+
+            // Progress bar click
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                this.videoElement.currentTime = pos * this.videoElement.duration;
+            });
+        }
+    }
+
+    toggleVideoPlayback() {
+        if (!this.videoElement) return;
+
+        if (this.isVideoPlaying) {
+            this.videoElement.pause();
+            this.hideVideo();
+        } else {
+            this.showVideo();
+            this.videoElement.play().catch(error => {
+                console.log('Video play failed:', error);
+                this.showNotAvailableToast('Video playback failed. Please check if the video file exists.');
+            });
+        }
+    }
+
+    showVideo() {
+        this.videoElement.classList.add('playing');
+        document.getElementById('heroContent').classList.add('video-playing');
+    }
+
+    hideVideo() {
+        this.videoElement.classList.remove('playing');
+        document.getElementById('heroContent').classList.remove('video-playing');
+        document.getElementById('videoControls').classList.remove('visible');
+        this.videoElement.currentTime = 0;
+    }
+
+    updatePlayButton() {
+        const playIcon = document.getElementById('playIcon');
+        const playText = document.getElementById('playText');
+
+        if (this.isVideoPlaying) {
+            playIcon.innerHTML = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+            playText.textContent = 'Pause';
+        } else {
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+            playText.textContent = 'Play';
+        }
+    }
+
+    updateProgress() {
+        if (!this.videoElement) return;
+
+        const progress = (this.videoElement.currentTime / this.videoElement.duration) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+    }
+
+    updateTimeDisplay() {
+        if (!this.videoElement) return;
+
+        const current = this.formatTime(this.videoElement.currentTime);
+        const duration = this.formatTime(this.videoElement.duration || 0);
+        document.getElementById('timeDisplay').textContent = `${current} / ${duration}`;
+    }
+
+    formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    startBreakTimer() {
+        // Clear any existing timer
+        this.clearBreakTimer();
+        
+        // Start 5-second timer for break popup
+        this.breakTimer = setTimeout(() => {
+            this.showBreakPopup();
+        }, 5000); // 5 seconds
+    }
+
+    clearBreakTimer() {
+        if (this.breakTimer) {
+            clearTimeout(this.breakTimer);
+            this.breakTimer = null;
+        }
+        if (this.breakCountdown) {
+            clearInterval(this.breakCountdown);
+            this.breakCountdown = null;
+        }
+    }
+
+    showBreakPopup() {
+        if (!this.isVideoPlaying) return;
+
+        // Pause video
+        this.videoElement.pause();
+        
+        // Show popup
+        const breakPopup = document.getElementById('breakPopup');
+        breakPopup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Start 5-second countdown
+        let countdownTime = 5;
+        const timerElement = document.getElementById('timerCount');
+        const continueBtn = document.getElementById('continueBtn');
+
+        timerElement.textContent = countdownTime;
+        continueBtn.disabled = true;
+        continueBtn.style.opacity = '0.5';
+
+        this.breakCountdown = setInterval(() => {
+            countdownTime--;
+            timerElement.textContent = countdownTime;
+
+            if (countdownTime <= 0) {
+                clearInterval(this.breakCountdown);
+                continueBtn.disabled = false;
+                continueBtn.style.opacity = '1';
+                document.getElementById('breakTimer').innerHTML = 'You can now continue watching';
+            }
+        }, 1000);
+    }
+
+    hideBreakPopup() {
+        const breakPopup = document.getElementById('breakPopup');
+        breakPopup.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        
+        // Clear countdown
+        this.clearBreakTimer();
+        
+        // Resume video
+        if (this.videoElement && !this.videoElement.ended) {
+            this.videoElement.play();
+            this.startBreakTimer(); // Restart break timer
+        }
+    }
+
+    toggleWarmLight() {
+        this.isWarmLightActive = !this.isWarmLightActive;
+        const warmLightBtn = document.getElementById('warmLightBtn');
+        const warmLightOverlay = document.getElementById('warmLightOverlay');
+
+        if (this.isWarmLightActive) {
+            warmLightBtn.classList.add('active');
+            warmLightOverlay.classList.add('active');
+            this.showToast('Warm Light Mode', 'Warm light mode enabled to reduce eye strain', 'success');
+        } else {
+            warmLightBtn.classList.remove('active');
+            warmLightOverlay.classList.remove('active');
+            this.showToast('Warm Light Mode', 'Warm light mode disabled', 'info');
+        }
     }
 
     setupScrollHeader() {
@@ -184,6 +422,9 @@ class NetflixApp {
         // Action row
         this.setupRowScroll('action', 'actionCards');
         
+        // Tamil row
+        this.setupRowScroll('tamil', 'tamilCards');
+        
         // Documentaries row
         this.setupRowScroll('documentaries', 'documentariesCards');
     }
@@ -239,12 +480,16 @@ class NetflixApp {
     }
 
     showNotAvailableToast(movieTitle) {
+        this.showToast('Content Not Available', `"${movieTitle}" is not available for streaming at this time.`, 'error');
+    }
+
+    showToast(title, message, type = 'info') {
         const toast = document.getElementById('toast');
         const toastTitle = document.getElementById('toastTitle');
         const toastMessage = document.getElementById('toastMessage');
         
-        toastTitle.textContent = 'Content Not Available';
-        toastMessage.textContent = `"${movieTitle}" is not available for streaming at this time.`;
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
         
         toast.classList.add('show');
         
@@ -262,6 +507,10 @@ class NetflixApp {
     toggleVolume() {
         this.isMuted = !this.isMuted;
         const volumeIcon = document.getElementById('volumeIcon');
+        
+        if (this.videoElement) {
+            this.videoElement.muted = this.isMuted;
+        }
         
         if (this.isMuted) {
             volumeIcon.innerHTML = `
@@ -344,17 +593,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-    // ESC to close modal
+    // ESC to close modal or break popup
     if (e.key === 'Escape') {
         const modal = document.getElementById('movieModal');
+        const breakPopup = document.getElementById('breakPopup');
+        
         if (modal.classList.contains('active')) {
             window.netflixApp.closeMovieModal();
+        } else if (breakPopup.classList.contains('active')) {
+            window.netflixApp.hideBreakPopup();
         }
     }
     
-    // Space to play/pause (show not available)
+    // Space to play/pause video
     if (e.key === ' ' && e.target.tagName !== 'INPUT') {
         e.preventDefault();
-        window.netflixApp.showNotAvailableToast('Current content');
+        window.netflixApp.toggleVideoPlayback();
+    }
+
+    // W key to toggle warm light
+    if (e.key.toLowerCase() === 'w' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        window.netflixApp.toggleWarmLight();
+    }
+
+    // M key to toggle mute
+    if (e.key.toLowerCase() === 'm' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        window.netflixApp.toggleVolume();
     }
 });
